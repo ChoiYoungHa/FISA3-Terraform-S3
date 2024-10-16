@@ -38,7 +38,6 @@ AWS CLI를 사용하기 위한 적절한 IAM 권한이 있다고 가정합니다
 ## 작업순서 🛠️
 
 ### 1. 버킷 IAM 정책 정의 및 연결 (`bucket_role.tf`) 🔐
-S3 버킷 생성과 관련된 IAM 역할과 정책을 정의하고 연결합니다.
 
 ```hcl
 resource "aws_iam_role" "s3_create_bucket_role" {
@@ -85,10 +84,10 @@ resource "aws_iam_role_policy_attachment" "attach_s3_policy" {
   policy_arn = aws_iam_policy.s3_full_access_policy.arn
 }
 ```
+S3 버킷 생성과 관련된 IAM 역할과 정책을 정의하고 연결합니다.
+
 
 ### 2. 버킷 생성 (`create_s3_bucket.tf`) 🛢
-S3 버킷을 생성하고, 퍼블릭 접근 설정을 구성합니다.
-
 ```hcl
 # S3 버킷 생성
 resource "aws_s3_bucket" "bucket1" {
@@ -105,9 +104,9 @@ resource "aws_s3_bucket_public_access_block" "bucket1_public_access_block" {
   restrict_public_buckets = false
 }
 ```
+S3 버킷을 생성하고, 퍼블릭 접근 설정을 구성합니다.
 
 ### 3. `index.html` 파일 업로드 및 웹호스팅 설정 (`index_s3_upload.tf`) 🌐
-S3 버킷에 `index.html` 파일을 업로드하고, 웹사이트 호스팅을 설정합니다.
 
 ```hcl
 # 이미 존재하는 S3 버킷에 index.html 파일을 업로드
@@ -149,9 +148,9 @@ resource "aws_s3_bucket_policy" "public_read_access" {
 EOF
 }
 ```
+S3 버킷에 `index.html` 파일을 업로드하고, 웹사이트 호스팅을 설정합니다.
 
 ### 4. 엔드포인트 설정 (`s3_endpoint.tf`) 🌍
-S3 버킷의 웹사이트 엔드포인트를 출력합니다.
 
 ```hcl
 output "website_endpoint" {
@@ -159,10 +158,9 @@ output "website_endpoint" {
   description = "The endpoint for the S3 bucket website."
 }
 ```
+S3 버킷의 웹사이트 엔드포인트를 출력합니다.
 
 ### 5. `index.html` 수정 ✏️
-`index.html` 파일을 수정하여 `main.html`로 이동하는 링크를 추가합니다.
-
 ```html
 <html lang="en">
 <head>
@@ -176,9 +174,9 @@ output "website_endpoint" {
 </body>
 </html>
 ```
+`index.html` 파일을 수정하여 `main.html`로 이동하는 링크를 추가합니다.
 
 ### 6. `index.html` 재업로드 (`index_s3_upload_v2.tf`) 🔄
-수정된 `index.html`과 새로운 `main.html` 파일을 S3 버킷에 업로드합니다.
 
 ```hcl
 # S3 버킷에 main.html 파일을 업로드
@@ -197,10 +195,9 @@ resource "aws_s3_object" "index_html_update" {  # 리소스 이름 변경
   content_type  = "text/html"
 }
 ```
+수정된 `index.html`과 새로운 `main.html` 파일을 S3 버킷에 업로드합니다.
 
 ### 7. EC2 생성 (`ec2_instance.tf`) 🖥️
-EC2 인스턴스를 생성하고, 필요한 네트워크 설정을 구성합니다.
-
 ```hcl
 # AWS Provider 설정
 provider "aws" {
@@ -235,6 +232,8 @@ resource "aws_instance" "ce33_ec2" {
   }
 }
 ```
+EC2 인스턴스를 생성하고, 필요한 네트워크 설정을 구성합니다.
+
 ## 트러블슈팅 🔥
 ![2024-10-16 13 48 58](https://github.com/user-attachments/assets/7bea40c8-efb3-4ed5-a403-07cf158554e5)
 위 에러 메시지는 Terraform에서 동일한 리소스 이름을 중복으로 선언했음을 의미합니다.
