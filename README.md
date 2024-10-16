@@ -3,7 +3,7 @@
 ## 개요 📋
 이 프로젝트는 Terraform을 사용하여 AWS 환경에 S3 버킷과 EC2 인스턴스를 생성하고, 웹 호스팅을 위한 `index.html` 파일을 업로드 및 업데이트하며 필요한 권한을 설정하는 과정을 다룹니다. 이를 통해 인프라를 코드로 관리하는 방법을 학습하고, AWS 리소스를 효율적으로 관리할 수 있는 능력을 키우는 것을 목표로 합니다.
 
-## ✉ 팀구성
+## 팀구성 🧸
     
 |<img src="https://avatars.githubusercontent.com/u/64997345?v=4" width="120" height="120"/>|<img src="https://avatars.githubusercontent.com/u/38968449?v=4" width="120" height="120"/>
 |:-:|:-:|
@@ -28,7 +28,7 @@ AWS CLI 설치 가이드를 참고하여 AWS CLI를 설치합니다.
 **Terraform 설치** 🛠️
 Terraform 다운로드 페이지를 방문하여 운영체제에 맞는 Terraform을 다운로드하고 설치합니다. 설치가 완료되면, 터미널에서 terraform --version 명령어를 실행하여 설치가 제대로 되었는지 확인합니다.
 
-![2024-10-16 12 21 15](https://github.com/user-attachments/assets/3b2c33ab-9730-4150-b831-836d6e54467c)
+![2024-10-16 12 21 15](https://github.com/user-attachments/assets/48c92359-412a-44ae-a9c8-7abb507cb990)
 
 **AWS CLI 권한 설정** 🔑
 AWS CLI를 사용하기 위한 적절한 IAM 권한이 있다고 가정합니다.
@@ -235,16 +235,49 @@ resource "aws_instance" "ce33_ec2" {
   }
 }
 ```
+## 트러블슈팅 🔥
+![2024-10-16 13 48 58](https://github.com/user-attachments/assets/7bea40c8-efb3-4ed5-a403-07cf158554e5)
+위 에러 메시지는 Terraform에서 동일한 리소스 이름을 중복으로 선언했음을 의미합니다.
+aws_s3_object 리소스의 이름인 "index"가 이미 이전에 선언되었기 때문에, 리소스 이름이 중복되어 에러가 발생한 것입니다.
+리소스 이름을 변경하여 설정을 다시 적용합니다.
 
-## 결과물 🎉
+**AS IS**
+```
+resource "aws_s3_object" "main" {
+  bucket        = aws_s3_bucket.bucket1.id
+  key           = "main.html"
+  source        = "main.html"
+  content_type  = "text/html"
+}
 
-![2024-10-16 12 15 14](https://github.com/user-attachments/assets/0ab3e0fb-1075-4a20-a149-01acc060fe39)
-S3에 호스팅하고, 테라폼을 통해 실시간으로 index.html을 변경한 작업입니다.
 
-<br>
+# S3 버킷에 index.html 파일을 다시 업로드 (덮어쓰기)
+resource "aws_s3_object" "index" {
+  bucket        = aws_s3_bucket.bucket1.id
+  key           = "index.html"
+  source        = "index.html"
+  content_type  = "text/html"
+}
+```
 
-![2024-10-16 12 15 20](https://github.com/user-attachments/assets/ee9097db-82d8-4606-b3e6-436919720e44)
+**TO BE**
+```
+resource "aws_s3_object" "main_html" {
+  bucket        = aws_s3_bucket.bucket1.id  
+  key           = "main.html"
+  source        = "main.html"
+  content_type  = "text/html"
+}
 
+resource "aws_s3_object" "index_html_update" {
+  bucket        = aws_s3_bucket.bucket1.id
+  key           = "index.html"
+  source        = "index.html"
+  content_type  = "text/html"
+}
+```
+
+![2024-10-16 13 54 57](https://github.com/user-attachments/assets/4fe8a57d-544e-4586-896a-ca22c294d5a3)
 
 
 ## 결론 및 고찰 💡
