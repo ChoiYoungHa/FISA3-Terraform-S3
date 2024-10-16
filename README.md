@@ -222,7 +222,7 @@ data "aws_security_group" "ce33_sg" {
 resource "aws_instance" "ce33_ec2" {
   ami                    = "ubuntu version ami"
   instance_type          = "t2.micro"
-  key_name               = "ce33-key"
+  key_name               = "secret-key"
   
   subnet_id              = "secret" 
   
