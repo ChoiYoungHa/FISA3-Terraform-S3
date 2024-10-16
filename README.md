@@ -210,13 +210,13 @@ provider "aws" {
 # VPC ID를 변수로 설정하거나, 기존 VPC를 사용
 variable "vpc_id" {
   description = "The ID of the VPC"
-  default     = "vpc-09e78cbaed9213315"  # 실제 VPC ID로 교체하세요.
+  default     = "secret" 
 }
 
 # 기존 보안 그룹을 데이터 소스로 가져오기
 data "aws_security_group" "ce33_sg" {
   name   = "ce33-sg"
-  vpc_id = "vpc-09e78cbaed9213315"
+  vpc_id = "secret"
 }
 
 resource "aws_instance" "ce33_ec2" {
@@ -224,7 +224,7 @@ resource "aws_instance" "ce33_ec2" {
   instance_type          = "t2.micro"
   key_name               = "ce33-key"
   
-  subnet_id              = "subnet-0f0657ae79fc04793" 
+  subnet_id              = "secret" 
   
   vpc_security_group_ids = [data.aws_security_group.ce33_sg.id]
   
